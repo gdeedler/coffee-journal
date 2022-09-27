@@ -1,6 +1,21 @@
-import styled from "styled-components";
+import { useContext } from 'react';
+import styled from 'styled-components';
+import { UserContext } from '../contexts';
 
-export default function CoffeeCard ({coffee: {name, country, elevation, notes, process, producer, region, roaster}}) {
+export default function CoffeeCard({
+  coffee: {
+    coffee_id,
+    name,
+    country,
+    elevation,
+    notes,
+    process,
+    producer,
+    region,
+    roaster,
+  },
+}) {
+  const userId = useContext(UserContext);
 
   return (
     <Card>
@@ -9,10 +24,22 @@ export default function CoffeeCard ({coffee: {name, country, elevation, notes, p
       <div>{region}</div>
       <div>{producer}</div>
       <div>
-        <button>Add to profile</button>
+        <button
+          onClick={() => {
+            fetch(`/api/${userId}/coffees`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({coffee_id}),
+            });
+          }}
+        >
+          Add to profile
+        </button>
       </div>
     </Card>
-  )
+  );
 }
 
 const Card = styled.div`
@@ -22,5 +49,5 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .5em;
-`
+  gap: 0.5em;
+`;

@@ -8,7 +8,7 @@ export default function Journal() {
   const [coffees, setCoffees] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/${userId}/coffees`, {
+    fetch(`/api/${userId}/coffees`, {
       method: 'GET',
     })
       .then((response) => response.json())

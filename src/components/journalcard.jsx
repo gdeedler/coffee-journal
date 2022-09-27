@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {Line} from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import {Link} from 'react-router-dom';
 
 
 export default function JournalCard ({coffee: {coffee_id, name, country, elevation, notes, process, producer, region, roaster}}) {
@@ -9,7 +10,7 @@ export default function JournalCard ({coffee: {coffee_id, name, country, elevati
   const [brews, setBrews] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/brews?' + new URLSearchParams({
+    fetch('/api/brews?' + new URLSearchParams({
       userId: 1,
       coffeeId: coffee_id,
     }), {
@@ -43,7 +44,7 @@ export default function JournalCard ({coffee: {coffee_id, name, country, elevati
           <Line
             data={data}/> : <div></div>}
         </Graph>
-        <button>BREW</button>
+        <Link to={`/brew/${coffee_id}`} >BREW</Link>
       </Body>
     </Card>
   )

@@ -1,5 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import styled from "styled-components";
+import {UserContext} from '../contexts'
+import {useState} from 'react';
 
 
 const data = {
@@ -21,20 +23,26 @@ const data = {
   ],
 };
 export default function Root() {
+
+  const [user,setUser] = useState(1);
+
   return (
-    <>
-      <Container>
-        <Header>
-          <Name>Coffee Journal</Name>
-          <Links>
-            <Link to={"journal"}>Journal</Link>
-            <Link to={"coffees"}>Coffees</Link>
-            <Link to={"analytics"}>Analytics</Link>
-          </Links>
-        </Header>
-        <Outlet/>
-      </Container>
-    </>
+
+    <UserContext.Provider value={user}>
+      <>
+        <Container>
+          <Header>
+            <Name>Coffee Journal</Name>
+            <Links>
+              <Link to={"journal"}>Journal</Link>
+              <Link to={"coffees"}>Coffees</Link>
+              <Link to={"analytics"}>Analytics</Link>
+            </Links>
+          </Header>
+          <Outlet/>
+        </Container>
+      </>
+    </UserContext.Provider>
   );
 }
 

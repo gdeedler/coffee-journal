@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CoffeeCard from '../components/coffeecard';
-
 export default function Coffees() {
   const [coffees, setCoffees] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/coffees', {
+    fetch('/api/coffees', {
       method: 'GET',
     })
       .then((response) => response.json())
@@ -20,7 +19,6 @@ export default function Coffees() {
 
   return (
     <Container>
-      <div>Your coffees</div>
       {cards}
     </Container>
   );
