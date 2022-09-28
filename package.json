@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon server",
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --emptyOutDir",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -8,6 +8,7 @@ import Analytics from './routes/analytics';
 import Login from './routes/login';
 import Brew from './routes/brew';
 import { Auth0Provider } from '@auth0/auth0-react';
+import './styles.css';
 
 
 const router = createBrowserRouter([

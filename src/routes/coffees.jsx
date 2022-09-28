@@ -26,5 +26,5 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
-  justify-content: space-evenly;
+  justify-content: space-between;
 `

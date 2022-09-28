@@ -31,9 +31,9 @@ export default function Root() {
           <Header>
             <Name>{isAuthenticated ? `${user.name}'s` : null} Coffee Journal</Name>
             <Links>
-              <Link to={'journal'}>Journal</Link>
-              <Link to={'coffees'}>Coffees</Link>
-              <Link to={'analytics'}>Analytics</Link>
+              <StyledLink to={'journal'}>Journal</StyledLink>
+              <StyledLink to={'coffees'}>Coffees</StyledLink>
+              <StyledLink to={'analytics'}>Analytics</StyledLink>
             </Links>
             {isAuthenticated ? (
               <button
@@ -45,7 +45,9 @@ export default function Root() {
               <button onClick={() => loginWithRedirect()}>Login</button>
             )}
           </Header>
-          <Outlet />
+          <OutletWrapper>
+            <Outlet />
+          </OutletWrapper>
         </Container>
       </>
     </UserContext.Provider>
@@ -56,25 +58,38 @@ const Container = styled.div`
   font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 80%;
   max-width: 1200px;
   margin: auto;
+  color: #2c1404;
 `;
 
 const Header = styled.header`
-  background-color: navy;
+  background-color: #2e1e06;
   border-radius: 5px;
   padding: 1em;
   display: flex;
   gap: 1em;
   align-items: center;
   margin-bottom: 0.5em;
+  width: 100%;
 `;
 const Links = styled.div`
   display: flex;
   margin-left: auto;
   gap: 1em;
+  color: white;
 `;
+const StyledLink = styled(Link)`
+  color: white;
+  &:visited{
+    color: white;
+  }
+`
+const OutletWrapper = styled.div`
+  width: 95%;
+`
 
 const Name = styled.div`
   color: white;

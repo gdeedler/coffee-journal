@@ -20,7 +20,6 @@ export default function Journal() {
 
   return (
     <Container>
-      <div>Your coffees</div>
       {cards}
     </Container>
   );
@@ -30,4 +29,5 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+  margin: auto;
 `;
