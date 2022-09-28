@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import JournalCard from '../components/journalcard';
+import api from '../helpers/api';
 
 export default function Journal() {
   const userId = 1;
@@ -8,11 +9,8 @@ export default function Journal() {
   const [coffees, setCoffees] = useState([]);
 
   useEffect(() => {
-    fetch(`/api/${userId}/coffees`, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => setCoffees(data))
+    api.get(`/journal/coffees`)
+      .then((data) => setCoffees(data.data))
       .catch((err) => console.log(err));
   }, []);
 

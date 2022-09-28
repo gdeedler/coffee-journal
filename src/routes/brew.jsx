@@ -1,9 +1,10 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useContext, useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { UserContext } from '../contexts';
+import api from '../helpers/api';
 
 export default function Brew() {
   const params = useParams();
@@ -15,28 +16,25 @@ export default function Brew() {
     method: 'pourover',
   });
   const user = useContext(UserContext);
+  const navigate = useNavigate();
 
   function getBrews() {
-    fetch(
-      '/api/brews?' +
-        new URLSearchParams({
-          userId: 1,
-          coffeeId: params.coffeeId,
-        }),
-      {
-        method: 'GET',
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => setBrews(data))
+    api
+      .get(
+        '/brews?' +
+          new URLSearchParams({
+            coffeeId: params.coffeeId,
+          })
+      )
+      .then((data) => setBrews(data.data))
       .catch((err) => console.log(err));
   }
 
   useEffect(() => {
     getBrews();
-    fetch('/api/coffees/' + params.coffeeId)
-      .then((data) => data.json())
-      .then((coffee) => setCoffee(coffee[0]))
+    api
+      .get('/coffees/' + params.coffeeId)
+      .then((coffee) => setCoffee(coffee.data[0]))
       .catch((err) => console.log(err));
   }, []);
 
@@ -57,13 +55,8 @@ export default function Brew() {
       ...form,
       coffeeId: coffee.coffee_id,
     };
-    fetch('/api/brews/' + user, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(submitForm),
-    })
+    api
+      .post('/brews', submitForm)
       .then(() => getBrews())
       .catch((err) => console.log(err));
   }
@@ -72,7 +65,10 @@ export default function Brew() {
 
   return (
     <Container>
-      <div>Brewing {coffee.name}</div>
+      <div>
+        Brewing {coffee.name} from {coffee.roaster}
+        <button onClick={() => navigate('/journal')}>Back</button>
+      </div>
       <Graph>{brews.length > 0 ? <Line data={data} /> : <div></div>}</Graph>
       <Form onSubmit={handleSubmit}>
         <label>

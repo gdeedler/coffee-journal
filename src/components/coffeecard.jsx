@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import styled from 'styled-components';
 import { UserContext } from '../contexts';
+import api from '../helpers/api';
 
 export default function CoffeeCard({
   coffee: {
@@ -26,13 +27,7 @@ export default function CoffeeCard({
       <div>
         <button
           onClick={() => {
-            fetch(`/api/${userId}/coffees`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({coffee_id}),
-            });
+            api.post(`/coffees`, {coffee_id});
           }}
         >
           Add to profile

@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import CoffeeCard from '../components/coffeecard';
+import api from '../helpers/api';
 export default function Coffees() {
   const [coffees, setCoffees] = useState([]);
 
   useEffect(() => {
-    fetch('/api/coffees', {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => setCoffees(data))
+    api.get('/coffees')
+      .then((response) => setCoffees(response.data))
       .catch((err) => console.log(err));
   }, []);
 

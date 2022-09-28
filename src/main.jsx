@@ -7,6 +7,8 @@ import Coffees from './routes/coffees';
 import Analytics from './routes/analytics';
 import Login from './routes/login';
 import Brew from './routes/brew';
+import { Auth0Provider } from '@auth0/auth0-react';
+
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,13 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Auth0Provider
+      domain='dev-1mdmd8kt.us.auth0.com'
+      clientId='pBxKETHM7pJXd5lwxnKhLHP6quFS9mm1'
+      redirectUri={window.location.origin}
+      audience="Coffee"
+      scope='read:coffees'>
+      <RouterProvider router={router} />
+    </Auth0Provider>
   </React.StrictMode>
 );
