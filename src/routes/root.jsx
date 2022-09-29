@@ -28,6 +28,7 @@ export default function Root() {
       });
       api.setAuthorization(accessToken);
       api.get('/auth').catch((err) => console.log('Failed to authenticate'));
+      if (window.location.pathname === '/') navigate('/journal');
     };
     getToken().catch((err) => console.log(err));
   }, [getAccessTokenSilently, user?.sub]);
