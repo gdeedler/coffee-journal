@@ -17,6 +17,10 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
+        path: '',
+        element: <Login />,
+      },
+      {
         path: 'journal',
         element: <Journal />,
       },
@@ -44,7 +48,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Auth0Provider
       domain='dev-1mdmd8kt.us.auth0.com'
       clientId='pBxKETHM7pJXd5lwxnKhLHP6quFS9mm1'
-      redirectUri={window.location.origin}
+      redirectUri={window.location.origin + '/coffees'}
       audience="Coffee"
       scope='read:coffees'>
       <RouterProvider router={router} />

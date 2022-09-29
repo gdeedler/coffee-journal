@@ -1,55 +1,60 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { UserContext } from '../contexts';
 import { useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, Auth0Provider } from '@auth0/auth0-react';
 import api from '../helpers/api';
 
 export default function Root() {
   const [userId, setUserId] = useState(1);
   const [token, setToken] = useState(null);
-  const { loginWithRedirect, logout, user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const {
+    loginWithRedirect,
+    logout,
+    user,
+    isAuthenticated,
+    getAccessTokenSilently,
+  } = useAuth0();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if(!isAuthenticated) return;
+    if (!isAuthenticated) {
+      return;
+    }
     const getToken = async () => {
       const accessToken = await getAccessTokenSilently({
         audience: 'Coffee',
         scope: 'read:coffees',
-      })
+      });
       api.setAuthorization(accessToken);
-      api.get('/auth').catch(err => console.log('Failed to authenticate'));
-    }
-    getToken().catch(err => console.log(err))
-  },[getAccessTokenSilently, user?.sub])
+      api.get('/auth').catch((err) => console.log('Failed to authenticate'));
+    };
+    getToken().catch((err) => console.log(err));
+  }, [getAccessTokenSilently, user?.sub]);
 
   return (
-    <UserContext.Provider value={userId}>
-      <>
-        <Container>
-          <Header>
-            <Name>{isAuthenticated ? `${user.given_name}'s` : null} Coffee Journal</Name>
-            <Links>
-              <StyledLink to={'journal'}>Journal</StyledLink>
-              <StyledLink to={'coffees'}>Coffees</StyledLink>
-              <StyledLink to={'analytics'}>Stats</StyledLink>
-            </Links>
-            {isAuthenticated ? (
-              <Button
-                onClick={() => logout({ returnTo: window.location.origin })}
-              >
-                Logout
-              </Button>
-            ) : (
-              <Button onClick={() => loginWithRedirect({redirect_uri: window.location.origin + 'journal'})}>Login</Button>
-            )}
-          </Header>
-          <OutletWrapper>
-            <Outlet />
-          </OutletWrapper>
-        </Container>
-      </>
-    </UserContext.Provider>
+    <Container>
+      <Header>
+        <Name>
+          {isAuthenticated ? `${user.given_name}'s` : null} Coffee Journal
+        </Name>
+        <Links>
+          <StyledLink to={'journal'}>Journal</StyledLink>
+          <StyledLink to={'coffees'}>Coffees</StyledLink>
+          <StyledLink to={'analytics'}>Stats</StyledLink>
+        </Links>
+        {isAuthenticated ? (
+          <Button onClick={() => logout({ returnTo: window.location.origin })}>
+            Logout
+          </Button>
+        ) : (
+          <Button onClick={() => loginWithRedirect()}>Login</Button>
+        )}
+      </Header>
+      <OutletWrapper>
+        <Outlet />
+      </OutletWrapper>
+    </Container>
   );
 }
 
@@ -86,13 +91,13 @@ const StyledLink = styled(Link)`
   &:hover {
     text-decoration: underline;
   }
-  &:visited{
+  &:visited {
     color: white;
   }
-`
+`;
 const OutletWrapper = styled.div`
   width: 95%;
-`
+`;
 
 const Name = styled.div`
   color: white;

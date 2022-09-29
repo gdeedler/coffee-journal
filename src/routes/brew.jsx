@@ -222,6 +222,7 @@ const Label = styled.label`
 `
 const Checkbox = styled.input`
   cursor: pointer;
+  background-color: red;
 `
 const Header = styled.div`
   font-size: 1.3em;
@@ -273,6 +274,8 @@ const Info = styled.div`
   justify-content: space-evenly;
   font-weight: 300;
   padding-right: 1em;
+  padding: 1em;
+  margin-right: 1em;
 `;
 const Form = styled.form`
   flex: 2;

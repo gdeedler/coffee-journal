@@ -21,7 +21,7 @@ export default function Coffees() {
 
   const fakeCards = [];
   for(let i = 0; i < cards.length % 3; i++) {
-    fakeCards.push(<FakeCard/>);
+    fakeCards.push(<FakeCard key={i}/>);
   }
 
   return (

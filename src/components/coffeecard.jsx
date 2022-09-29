@@ -52,12 +52,14 @@ export default function CoffeeCard({
 const Name = styled.div`
   font-weight: 500;
   font-size: large;
-  margin-top: 0.1em;
+  margin-top .1em;
+  text-align: center;
 `;
 const Roaster = styled.span`
   font-weight: 300;
   font-size: medium;
   font-style: italic;
+  white-space: nowrap;
 `
 const Card = styled.div`
   width: 30%;
