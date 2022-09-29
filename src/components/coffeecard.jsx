@@ -14,7 +14,7 @@ export default function CoffeeCard({
     producer,
     region,
     roaster,
-  },
+  }, update
 }) {
   const userId = useContext(UserContext);
 
@@ -40,7 +40,7 @@ export default function CoffeeCard({
       </Table>
       <Button
         onClick={() => {
-          api.post(`/coffees`, { coffee_id });
+          api.post(`/coffees`, { coffee_id }).then(() => update()).catch(err => console.log(err));
         }}
       >
         Add to profile

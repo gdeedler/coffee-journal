@@ -70,6 +70,9 @@ export default function Brew() {
       x: {},
     },
     maintainAspectRatio: false,
+    animation: {
+      duration: 500,
+    }
   };
 
   function handleSubmit(e) {
@@ -90,7 +93,6 @@ export default function Brew() {
       const method = brew.method;
       if (shownMethods[method] === undefined && methods[method] === undefined) methods[method] = true;
     }
-    console.log(methods);
     setShownMethods({ ...shownMethods, ...methods });
   }, [brews]);
 
@@ -126,7 +128,7 @@ export default function Brew() {
         {brews.length > 0 ? (
           <Line data={data} options={options} />
         ) : (
-          <div></div>
+          <MissingText>Start brewing to see your data</MissingText>
         )}
       </Graph>
       <Methods>Display: {methodButtons}</Methods>
@@ -199,7 +201,7 @@ export default function Brew() {
             </Select>
           </Label>
           <div>
-            <button type="submit">Add brew</button>
+            <BrewButton type="submit">Add brew</BrewButton>
           </div>
         </Form>
       </Body>
@@ -247,8 +249,14 @@ const Button = styled.button`
     color: white;
   }
 `;
+const BrewButton = styled(Button)`
+  font-size: 1.1em;
+`
 const Graph = styled.div`
   min-height: 20em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const Methods = styled.div`
   display: flex;
@@ -320,4 +328,9 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+`;
+const MissingText = styled.div`
+  font-style: italic;
+  font-size: 1.3em;
+  opacity: 50%;
 `;

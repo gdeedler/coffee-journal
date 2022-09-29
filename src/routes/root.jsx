@@ -22,27 +22,26 @@ export default function Root() {
     }
     getToken().catch(err => console.log(err))
   },[getAccessTokenSilently, user?.sub])
-  console.log(user);
 
   return (
     <UserContext.Provider value={userId}>
       <>
         <Container>
           <Header>
-            <Name>{isAuthenticated ? `${user.name}'s` : null} Coffee Journal</Name>
+            <Name>{isAuthenticated ? `${user.given_name}'s` : null} Coffee Journal</Name>
             <Links>
               <StyledLink to={'journal'}>Journal</StyledLink>
               <StyledLink to={'coffees'}>Coffees</StyledLink>
-              <StyledLink to={'analytics'}>Analytics</StyledLink>
+              <StyledLink to={'analytics'}>Stats</StyledLink>
             </Links>
             {isAuthenticated ? (
-              <button
+              <Button
                 onClick={() => logout({ returnTo: window.location.origin })}
               >
                 Logout
-              </button>
+              </Button>
             ) : (
-              <button onClick={() => loginWithRedirect()}>Login</button>
+              <Button onClick={() => loginWithRedirect({redirect_uri: window.location.origin + 'journal'})}>Login</Button>
             )}
           </Header>
           <OutletWrapper>
@@ -78,11 +77,15 @@ const Header = styled.header`
 const Links = styled.div`
   display: flex;
   margin-left: auto;
-  gap: 1em;
+  gap: 2em;
   color: white;
 `;
 const StyledLink = styled(Link)`
   color: white;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
   &:visited{
     color: white;
   }
@@ -93,6 +96,22 @@ const OutletWrapper = styled.div`
 
 const Name = styled.div`
   color: white;
-  font-size: larger;
-  font-weight: bolder;
+  font-size: 1.5em;
+  font-weight: 400;
+`;
+const Button = styled.button`
+  float: right;
+  text-decoration: none;
+  font-size: 1em;
+  background-color: antiquewhite;
+  font-family: inherit;
+  color: black;
+  border: none;
+  border-radius: 3px;
+  padding: 0.3em 0.5em;
+  margin-left: 2em;
+  cursor: pointer;
+  &:hover {
+    color: white;
+  }
 `;

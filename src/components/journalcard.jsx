@@ -17,8 +17,10 @@ export default function JournalCard({
     region,
     roaster,
   },
+  deleteCoffee,
 }) {
   const [brews, setBrews] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -87,44 +89,100 @@ export default function JournalCard({
   }
 
   return (
-    <Card>
-      <Head>
-        <Title>
-          {name} <Roaster>from {roaster}</Roaster>
-        </Title>
-        <Graph>
-          {brews.length > 0 ? (
-            <Line data={data} options={options} />
-          ) : (
-            <Graph>
-              <MissingText>Start brewing to see your data</MissingText>
-            </Graph>
-          )}
-        </Graph>
-      </Head>
-      <Info>
-        <Row>
-          <div>Times brewed: </div>
-          <div>{brews.length}</div>
-        </Row>
-        <Row>
-          <div>Average rating: </div>
-          {brews.length > 0 && <div>{averageRating}</div>}
-        </Row>
-        <Row>
-          <div>Average dose: </div>
-          {brews.length > 0 && <div>{averageDose}g</div>}
-        </Row>
-        <Row>
-          <div>Usual method: </div>
-          <div>{method}</div>
-        </Row>
-        <Button onClick={() => navigate('/brew/' + coffee_id)}>BREW</Button>
-      </Info>
-    </Card>
+    <Container>
+      <Card>
+        <Head>
+          <Title>
+            {name} <Roaster>from {roaster}</Roaster>
+          </Title>
+          <Graph>
+            {brews.length > 0 ? (
+              <Line data={data} options={options} />
+            ) : (
+              <Graph>
+                <MissingText>Start brewing to see your data</MissingText>
+              </Graph>
+            )}
+          </Graph>
+        </Head>
+        <Info>
+          <Row>
+            <div>Times brewed: </div>
+            <div>{brews.length}</div>
+          </Row>
+          <Row>
+            <div>Average rating: </div>
+            {brews.length > 0 && <div>{averageRating}</div>}
+          </Row>
+          <Row>
+            <div>Average dose: </div>
+            {brews.length > 0 && <div>{averageDose}g</div>}
+          </Row>
+          <Row>
+            <div>Usual method: </div>
+            <div>{method}</div>
+          </Row>
+          <Buttons>
+            <XButton onClick={() => setShowModal(true)}>X</XButton>
+            <Button onClick={() => navigate('/brew/' + coffee_id)}>BREW</Button>
+          </Buttons>
+        </Info>
+      </Card>
+      {showModal && (
+        <Modal onClick={() => setShowModal(false)}>
+          <ModalBox onClick={(e) => e.stopPropagation()}>
+            <div>
+              Are you sure you want to remove this coffee? You will also lose
+              all brew data
+            </div>
+            <ConfirmButtons>
+              <Button
+                onClick={() => {
+                  deleteCoffee(coffee_id);
+                  setShowModal(false);
+                }}
+              >
+                Delete
+              </Button>
+              <Button onClick={() => setShowModal(false)}>No</Button>
+            </ConfirmButtons>
+          </ModalBox>
+        </Modal>
+      )}
+    </Container>
   );
 }
 
+const Container = styled.div`
+  position: relative;
+`;
+const Modal = styled.div`
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const ModalBox = styled.div`
+  background-color: antiquewhite;
+  max-width: 30%;
+  font-size: 1.2em;
+  padding: 3em;
+`;
+const ConfirmButtons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+  margin-top: 1em;
+  margin-bottom: -2em;
+`;
 const Card = styled.div`
   border: 2px solid #2c1404;
   border-radius: 5px;
@@ -177,6 +235,13 @@ const Row = styled.div`
   width: 100%;
   justify-content: space-between;
 `;
+const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+  font-size: 0.8em;
+  gap: 1em;
+`;
 const Button = styled.button`
   text-decoration: none;
   font-size: 1.5em;
@@ -185,9 +250,19 @@ const Button = styled.button`
   border: none;
   border-radius: 3px;
   padding: 0.3em 0.5em;
-  margin-top: auto;
   cursor: pointer;
-  &:hover{
+  &:hover {
     color: white;
+  }
+`;
+const XButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.5em;
+  width: 1.5em;
+  background-color: #773217;
+  &:hover {
+    color: #d63d0f;
   }
 `;

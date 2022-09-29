@@ -1,3 +1,4 @@
+import { areOptionsEqual } from '@mui/base';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import JournalCard from '../components/journalcard';
@@ -8,21 +9,26 @@ export default function Journal() {
 
   const [coffees, setCoffees] = useState([]);
 
-  useEffect(() => {
-    api.get(`/journal/coffees`)
+  function getCoffees() {
+    api
+      .get(`/journal/coffees`)
       .then((data) => setCoffees(data.data))
       .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    getCoffees();
   }, []);
 
   const cards = coffees.map((coffee, i) => (
-    <JournalCard coffee={coffee} key={i} />
+    <JournalCard coffee={coffee} key={coffee.coffee_id} deleteCoffee={deleteCoffee} />
   ));
 
-  return (
-    <Container>
-      {cards}
-    </Container>
-  );
+  function deleteCoffee(coffee_id) {
+    api.delete(`/journal/coffees/${coffee_id}`).then(() => getCoffees()).catch(err => console.log(err))
+  }
+
+  return <Container>{cards}</Container>;
 }
 
 const Container = styled.div`
