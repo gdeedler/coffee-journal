@@ -67,6 +67,7 @@ const Container = styled.div`
   padding: .5em;
 `
 const Stat = styled.span`
+  color: #2c1404;
   background-color: antiquewhite;
   padding: 0 10px;
 `

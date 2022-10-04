@@ -1,9 +1,13 @@
-body {
-  background-color: rgb(235, 214, 187);
+body {  
+  margin: 0;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
