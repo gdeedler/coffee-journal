@@ -11,11 +11,13 @@ const light = {
   dark: false,
   text: "#2c1404",
   background: "rgb(235, 214, 187)",
+  itemBg: 'antiquewhite',
 };
 const dark = {
   dark: true,
   text: "antiquewhite",
   background: "#2c1404  ",
+  itemBg: '#271203',
 };
 
 export default function Root() {
@@ -62,12 +64,12 @@ export default function Root() {
               <StyledLink to={"analytics"}>Stats</StyledLink>
               {darkMode ? (
                 <MdLightMode
-                  style={{ fontSize: "1.5em", animation: "fadein .5s" }}
+                  style={{ fontSize: "1.5em", animation: "fadein .5s", cursor: 'pointer' }}
                   onClick={() => setDarkMode(false)}
                 />
               ) : (
                 <MdDarkMode
-                  style={{ fontSize: "1.5em", animation: "fadein .5s" }}
+                  style={{ fontSize: "1.5em", animation: "fadein .5s", cursor: 'pointer' }}
                   onClick={() => setDarkMode(true)}
                 />
               )}

@@ -5,6 +5,7 @@ import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { UserContext } from '../contexts';
 import api from '../helpers/api';
+import { ThemeContext } from 'styled-components';
 
 export default function Brew() {
   const params = useParams();
@@ -19,6 +20,7 @@ export default function Brew() {
   const [shownMethods, setShownMethods] = useState({});
   const user = useContext(UserContext);
   const navigate = useNavigate();
+  const theme = useContext(ThemeContext);
 
   function getBrews() {
     api
@@ -48,14 +50,14 @@ export default function Brew() {
         label: 'Rating',
         data: brews.filter(brew => shownMethods[brew.method]).map((brew) => brew.rating),
         tension: 0.3,
-        borderColor: '#2c1404',
+        borderColor: theme.text,
         fill: true,
       },
       {
         label: 'Bitter/Sour',
         data: brews.filter(brew => shownMethods[brew.method]).map((brew) => brew.bitter_sour),
         borderDash: [5, 5],
-        borderColor: '#2c1404',
+        borderColor: theme.text,
         tension: 0.3,
       },
     ],
@@ -210,10 +212,11 @@ export default function Brew() {
 }
 
 const Container = styled.div`
+  transition: all 1s ease;
   display: flex;
   flex-direction: column;
-  background-color: antiquewhite;
-  border: 2px solid #2c1404;
+  background-color: ${props => props.theme.itemBg};
+  border: 2px solid;
   border-radius: 5px;
   padding: 1em;
 `;
@@ -242,6 +245,8 @@ const Button = styled.button`
   font-size: 0.8em;
   background-color: #2c1404;
   color: antiquewhite;
+  transition: outline 1s ease;
+  outline: ${props => props.theme.dark ? "2px solid antiquewhite" : 'none'};
   border: none;
   border-radius: 3px;
   padding: 0.3em 0.5em;
@@ -296,10 +301,11 @@ const Range = styled.input`
     opacity: 1;
   }
   &::-moz-range-thumb {
+    transition: background 1s ease;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #2c1404;
+    background: ${props => props.theme.text};
     border: none;
   }
 `;

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../helpers/api';
+import { ThemeContext } from 'styled-components';
 
 export default function JournalCard({
   coffee: {
@@ -22,6 +23,7 @@ export default function JournalCard({
   const [brews, setBrews] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const theme = useContext(ThemeContext);
 
   useEffect(() => {
     api
@@ -43,7 +45,7 @@ export default function JournalCard({
         label: 'Brew rating',
         data: brews.map((brew) => brew.rating),
         tension: 0.3,
-        borderColor: '#2c1404',
+        borderColor: theme.text,
         pointRadius: 0,
         fill: true,
       },
@@ -175,6 +177,7 @@ const ModalBox = styled.div`
   max-width: 30%;
   font-size: 1.2em;
   padding: 3em;
+  border-radius: .7em;
 `;
 const ConfirmButtons = styled.div`
   display: flex;
@@ -184,13 +187,13 @@ const ConfirmButtons = styled.div`
   margin-bottom: -2em;
 `;
 const Card = styled.div`
-  border: 2px solid #2c1404;
+  transition: all 1s ease;
+  border: 2px solid;
   border-radius: 5px;
   display: flex;
   gap: 0.5em;
   padding: 0.5em;
-  color: #2c1404;
-  background-color: antiquewhite;
+  background-color: ${props => props.theme.itemBg};
   height: 15em;
 `;
 const Head = styled.div`
@@ -245,8 +248,9 @@ const Buttons = styled.div`
 const Button = styled.button`
   text-decoration: none;
   font-size: 1.5em;
-  background-color: #2c1404;
   color: antiquewhite;
+  outline: ${props => props.theme.dark ? "2px solid antiquewhite" : 'none'};
+  background-color: #2c1404;
   border: none;
   border-radius: 3px;
   padding: 0.3em 0.5em;
