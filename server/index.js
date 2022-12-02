@@ -3,41 +3,39 @@ const morgan = require('morgan');
 const path = require('path');
 const routes = require('./controllers');
 const cors = require('cors');
-const { auth, requiredScopes } = require('express-oauth2-jwt-bearer');
-const jwt = require('jsonwebtoken')
+const { auth, requiresAuth } = require('express-openid-connect');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.port || 3000;
-const checkJwt = auth({
-  audience:'Coffee',
-  issuerBaseURL: `https://dev-1mdmd8kt.us.auth0.com/`,
-})
-
+const config = {
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: 'http://localhost:3000/',
+  clientID: 'ZNognIQB1xtAwP5NirVeAbp4W1nhC5Tl',
+  issuerBaseURL: 'https://dev-1mdmd8kt.us.auth0.com',
+  routes: {
+    login: '/api/login',
+    logout: '/api/logout',
+  }
+};
 
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
-app.use((req, res, next) => {
-  let token = req.headers.authorization;
-  if(token) {
-    let decoded = jwt.decode(token.replace('Bearer ', '')).sub
-    decoded = decoded.split('|')[1];
-    req.userId = Number(decoded);
-  }
-  next();
-})
 
-app.get('/api/auth', checkJwt, routes.addUser);
-app.get('/api/coffees/:coffeeId', checkJwt, routes.getOneCoffee);
 app.get('/api/coffees', routes.getAll);
-app.get('/api/journal/coffees', checkJwt, routes.getUserCoffees)
-app.get('/api/brews',checkJwt, routes.getBrews);
-app.get('/api/brews/all', checkJwt, routes.getAllBrews);
-app.post('/api/brews/',checkJwt, routes.addBrew);
-app.post('/api/coffees',checkJwt, routes.addCoffee);
-app.delete('/api/journal/coffees/:coffeeId', checkJwt, routes.deleteCoffee);
+app.use(auth(config));
+
+app.get('/api/auth', routes.addUser);
+app.get('/api/coffees/:coffeeId', routes.getOneCoffee);
+app.get('/api/journal/coffees', routes.getUserCoffees)
+app.get('/api/brews', routes.getBrews);
+app.get('/api/brews/all', routes.getAllBrews);
+app.post('/api/brews/', routes.addBrew);
+app.post('/api/coffees', routes.addCoffee);
+app.delete('/api/journal/coffees/:coffeeId', routes.deleteCoffee);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
