@@ -62,15 +62,16 @@ const Roaster = styled.span`
   white-space: nowrap;
 `
 const Card = styled.div`
+  transition: all 1s ease;
   width: 30%;
-  color: #2c1404;
+  color: ${props => props.theme.text};
   border: 2px solid;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.3em;
-  background-color: antiquewhite;
+  background-color: ${props => props.theme.itemBg};
   padding: 0.2em;
 `;
 const Table = styled.div`
@@ -101,13 +102,14 @@ const Notes = styled.div`
   font-style: italic;
 `;
 const Button = styled.button`
+  transition: all 1s ease;
   padding: 0.2em;
   text-decoration: none;
   font-size: 1em;
   padding: .5em;
   width: 103%;
-  background-color: #2c1404;
-  color: antiquewhite;
+  background-color: ${props => props.theme.text};
+  color: ${props => props.theme.background};
   border: none;
   border-radius: 0 0 5px 5px;
   margin: -4px;
