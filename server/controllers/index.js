@@ -37,8 +37,9 @@ module.exports = {
     ON c.coffee_id = cu.coffee_id
     INNER JOIN users u
     ON cu.user_id = u.user_id
+    WHERE u.user_id = $1
     GROUP BY c.coffee_id;
-    `)
+    `, [userId])
     res.status(200);
     res.send(coffees.rows);
   },

@@ -45,13 +45,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Auth0Provider
-      domain='dev-1mdmd8kt.us.auth0.com'
-      clientId='pBxKETHM7pJXd5lwxnKhLHP6quFS9mm1'
-      redirectUri={window.location.origin}
-      audience="Coffee"
-      scope='read:coffees'>
-      <RouterProvider router={router} />
-    </Auth0Provider>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

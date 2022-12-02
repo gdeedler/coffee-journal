@@ -1,94 +1,93 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { UserContext } from "../contexts";
-import { useEffect, useState } from "react";
-import { useAuth0, Auth0Provider } from "@auth0/auth0-react";
-import api from "../helpers/api";
-import { ThemeProvider } from "styled-components";
-import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { UserContext } from '../contexts';
+import { useEffect, useState } from 'react';
+import { useAuth0, Auth0Provider } from '@auth0/auth0-react';
+import api from '../helpers/api';
+import { ThemeProvider } from 'styled-components';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 const light = {
   dark: false,
-  text: "#2c1404",
-  background: "rgb(235, 214, 187)",
+  text: '#2c1404',
+  background: 'rgb(235, 214, 187)',
   itemBg: 'antiquewhite',
 };
 const dark = {
   dark: true,
-  text: "antiquewhite",
-  background: "#2c1404  ",
+  text: 'antiquewhite',
+  background: '#2c1404  ',
   itemBg: '#271203',
 };
 
 export default function Root() {
-  const [userId, setUserId] = useState(1);
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const theme = darkMode ? dark : light;
-  const {
-    loginWithRedirect,
-    logout,
-    user,
-    isAuthenticated,
-    getAccessTokenSilently,
-  } = useAuth0();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      return;
-    }
-    const getToken = async () => {
-      const accessToken = await getAccessTokenSilently({
-        audience: "Coffee",
-        scope: "read:coffees",
-      });
-      api.setAuthorization(accessToken);
-      api.get("/auth").catch((err) => console.log("Failed to authenticate"));
-      if (window.location.pathname === "/") navigate("/journal");
-    };
-    getToken().catch((err) => console.log(err));
-  }, [getAccessTokenSilently, user?.sub]);
+    api.get('/profile')
+      .then(res => {
+        setUser(res.data);
+        api.get('/auth').catch(err => console.error('Failed to auth', err))
+      }).catch(err => console.error('Failed to fetch profile data', err))
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>
-      <Background>
-        <Container>
-          <Header>
-            <Name>
-              {isAuthenticated ? `${user.given_name}'s` : null} Coffee Journal
-            </Name>
-            <Links>
-              <StyledLink to={"journal"}>Journal</StyledLink>
-              <StyledLink to={"coffees"}>Coffees</StyledLink>
-              <StyledLink to={"analytics"}>Stats</StyledLink>
-              {darkMode ? (
-                <MdLightMode
-                  style={{ fontSize: "1.5em", animation: "fadein .5s", cursor: 'pointer' }}
-                  onClick={() => setDarkMode(false)}
-                />
+      <UserContext.Provider value={user}>
+        <Background>
+          <Container>
+            <Header>
+              <Name>
+                {user ? `${user.given_name}'s` : null} Coffee Journal
+              </Name>
+              <Links>
+                <StyledLink to={'journal'}>Journal</StyledLink>
+                <StyledLink to={'coffees'}>Coffees</StyledLink>
+                <StyledLink to={'analytics'}>Stats</StyledLink>
+                {darkMode ? (
+                  <MdLightMode
+                    style={{
+                      fontSize: '1.5em',
+                      animation: 'fadein .5s',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setDarkMode(false)}
+                  />
+                ) : (
+                  <MdDarkMode
+                    style={{
+                      fontSize: '1.5em',
+                      animation: 'fadein .5s',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setDarkMode(true)}
+                  />
+                )}
+              </Links>
+              {user ? (
+                <Button>
+                  <a href={`${window.location.origin}/api/logout?redirect_uri=${window.location.origin}`}>Logout</a>
+                </Button>
               ) : (
-                <MdDarkMode
-                  style={{ fontSize: "1.5em", animation: "fadein .5s", cursor: 'pointer' }}
-                  onClick={() => setDarkMode(true)}
-                />
+                <Button>
+                  <a
+                    href={`${window.location.origin}/api/login?redirect_uri=${window.location.origin}/journal`}
+                  >
+                    Login
+                  </a>
+                </Button>
               )}
-            </Links>
-            {isAuthenticated ? (
-              <Button
-                onClick={() => logout({ returnTo: window.location.origin })}
-              >
-                Logout
-              </Button>
-            ) : (
-              <Button onClick={() => loginWithRedirect()}>Login</Button>
-            )}
-          </Header>
-          <OutletWrapper>
-            <Outlet />
-          </OutletWrapper>
-        </Container>
-      </Background>
+            </Header>
+            <OutletWrapper>
+              <Outlet />
+            </OutletWrapper>
+          </Container>
+        </Background>
+      </UserContext.Provider>
     </ThemeProvider>
   );
 }
@@ -102,7 +101,7 @@ const Background = styled.div`
   transition: all 1s ease;
 `;
 const Container = styled.div`
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -115,7 +114,7 @@ const Container = styled.div`
 const Header = styled.header`
   background-color: #2c1404;
   border-radius: 5px;
-  outline: ${(props) => (props.theme.dark ? "2px solid antiquewhite" : "none")};
+  outline: ${(props) => (props.theme.dark ? '2px solid antiquewhite' : 'none')};
   padding: 1em;
   display: flex;
   gap: 1em;
@@ -154,9 +153,11 @@ const Button = styled.button`
   text-decoration: none;
   font-size: 1em;
   font-family: inherit;
-  color: ${props => props.theme.text};
-  outline: ${props => props.theme.dark ? '2px solid antiquewhite' : '2px solid #2c1404'};
-  background-color: ${props => props.theme.dark ? '#2c1404' : 'antiquewhite'};
+  color: ${(props) => props.theme.text};
+  outline: ${(props) =>
+    props.theme.dark ? '2px solid antiquewhite' : '2px solid #2c1404'};
+  background-color: ${(props) =>
+    props.theme.dark ? '#2c1404' : 'antiquewhite'};
   border: none;
   border-radius: 3px;
   padding: 0.3em 0.5em;

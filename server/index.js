@@ -25,10 +25,17 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/coffees', routes.getAll);
 app.use(auth(config));
+app.use((req, res, next) => {
+  req.userId = req.oidc.user.sub;
+  next();
+});
 
+app.get('/api/profile', (req, res) => {
+  res.send(JSON.stringify(req.oidc.user))
+});
 app.get('/api/auth', routes.addUser);
+app.get('/api/coffees', routes.getAll);
 app.get('/api/coffees/:coffeeId', routes.getOneCoffee);
 app.get('/api/journal/coffees', routes.getUserCoffees)
 app.get('/api/brews', routes.getBrews);
