@@ -11,7 +11,7 @@ const PORT = process.env.port || 3000;
 const config = {
   auth0Logout: true,
   secret: process.env.SECRET,
-  baseURL: 'http://3.135.60.17/',
+  baseURL: 'http://3.135.60.17:3000/',
   clientID: 'ZNognIQB1xtAwP5NirVeAbp4W1nhC5Tl',
   issuerBaseURL: 'https://dev-1mdmd8kt.us.auth0.com',
   routes: {
