@@ -28,12 +28,14 @@ export default function Root() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/profile')
-      .then(res => {
+    api
+      .get('/profile')
+      .then((res) => {
         setUser(res.data);
-        api.get('/auth').catch(err => console.error('Failed to auth', err))
-      }).catch(err => console.error('Failed to fetch profile data', err))
-  }, [])
+        api.get('/auth').catch((err) => console.error('Failed to auth', err));
+      })
+      .catch((err) => console.error('Failed to fetch profile data', err));
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -41,9 +43,7 @@ export default function Root() {
         <Background>
           <Container>
             <Header>
-              <Name>
-                {user ? `${user.given_name}'s` : null} Coffee Journal
-              </Name>
+              <Name>{user ? `${user.given_name}'s` : null} Coffee Journal</Name>
               <Links>
                 <StyledLink to={'journal'}>Journal</StyledLink>
                 <StyledLink to={'coffees'}>Coffees</StyledLink>
@@ -70,15 +70,19 @@ export default function Root() {
               </Links>
               {user ? (
                 <Button>
-                  <a href={`${window.location.origin}/api/logout?redirect_uri=${window.location.origin}`}>Logout</a>
+                  <A
+                    href={`${window.location.origin}/api/logout?redirect_uri=${window.location.origin}`}
+                  >
+                    Logout
+                  </A>
                 </Button>
               ) : (
                 <Button>
-                  <a
+                  <A
                     href={`${window.location.origin}/api/login?redirect_uri=${window.location.origin}/journal`}
                   >
                     Login
-                  </a>
+                  </A>
                 </Button>
               )}
             </Header>
@@ -146,6 +150,9 @@ const Name = styled.div`
   color: antiquewhite;
   font-size: 1.5em;
   font-weight: 400;
+`;
+const A = styled.a`
+  color: ${(props) => props.theme.text};
 `;
 const Button = styled.button`
   transition: all 1s ease;
